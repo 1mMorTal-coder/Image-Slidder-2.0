@@ -1,0 +1,123 @@
+// if nothing is passed as  a parameter of @include display-flex;
+// then the default value i.e. row will be the value of $direction
+@mixin display-flex($direction: row) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: $direction;
+}
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  background-color: #070d2d;
+  color: #fff;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  @include display-flex;
+  align-items: flex-start;
+}
+
+.content {
+  height: 100%;
+  @include display-flex(column);
+  justify-content: space-around;
+  h1 {
+    font-size: 3rem;
+  }
+}
+.container {
+  width: 60%;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  &_img {
+    width: 600%;
+    transition: transform 1s ease-in-out;
+    display: inline-flex;
+    > * {
+      flex: 1 1 100%;
+      margin: 0 10px 0px 0px;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      filter: grayscale(0.1) brightness(0.9);
+    }
+  }
+}
+:root {
+  --arrow_size: 3.5rem;
+  --toggle-width: 100px;
+  --toggle-height: 10px;
+}
+
+.left_arrow,
+.right_arrow {
+  position: absolute;
+  font-weight: bolder;
+  z-index: 2;
+  font-size: var(--arrow_size);
+  top: calc(50% - var(--arrow_size) / 2);
+}
+.left_arrow:hover,
+.right_arrow:hover {
+  cursor: pointer;
+}
+.left_arrow {
+  left: 20px;
+}
+.right_arrow {
+  right: 20px;
+}
+
+.toggle_button {
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  position: absolute;
+  z-index: 2;
+  bottom: 20px;
+  left: calc(50% - var(--toggle-width) / 2);
+  @include display-flex;
+  justify-content: space-between;
+  .circle,
+  .moving_circle {
+    width: var(--toggle-height);
+    height: var(--toggle-height);
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.445);
+  }
+  .moving_circle {
+    position: absolute;
+    background: rgb(255, 255, 255);
+    transition: transform 0.8s ease-in-out;
+  }
+  .circle:hover {
+    cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .container {
+    width: 100%;
+  }
+  .content h1 {
+    font-size: 2.5rem;
+  }
+  :root {
+    --arrow_size: 2.5rem;
+    --toggle-width: 100px;
+    --toggle-height: 12px;
+  }
+  .content {
+    height: 80%;
+  }
+}

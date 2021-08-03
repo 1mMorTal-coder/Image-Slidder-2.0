@@ -55,7 +55,7 @@ function arrowClicked(direction) {
         circleCount = 5;
     }
   }
-  setTimeout(() => {
+  window.requestAnimationFrame(() => {
     imageContainer.style.transition = 'transform 0.7s ease-in-out';
     movingCircle.style.transition = 'transform 0.7s ease-in-out';
     imageContainer.style.transform = `translateX(calc(-100% / 7 * ${arrowCount}))`;

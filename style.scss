@@ -39,8 +39,8 @@ body {
   overflow: hidden;
   position: relative;
   &_img {
-    width: 600%;
-    transition: transform 1s ease-in-out;
+    width: 700%;
+    transition: transform 0.5s ease-in-out;
     display: inline-flex;
     > * {
       flex: 1 1 100%;

@@ -9,7 +9,7 @@ circle.forEach(element => {
     cancelAnimationFrame(requestId);
     movingCircle.style.transform = `translateX(${e.target.offsetLeft}px)`;
     arrowCount = circleCount = Number(e.target.classList[1]);
-    imageContainer.style.transform = `translateX(calc(-100% / 6 * ${arrowCount}))`;
+    imageContainer.style.transform = `translateX(calc(-100% / 7 * ${arrowCount}))`;
     requestId = window.requestAnimationFrame(step);
     start = 0;
   })
@@ -19,37 +19,56 @@ let rightArrow = document.getElementsByClassName('right_arrow')[0];
 let imageContainer = document.getElementsByClassName('container_img')[0];
 
 let containerWidth = document.getElementsByClassName('container')[0].offsetWidth;
-rightArrow.addEventListener('click', arrowClicked);
-leftArrow.addEventListener('click', arrowClicked);
 
+let previousTime = new Date().getTime();
+let requestId;
+rightArrow.addEventListener('click', trigger);
+leftArrow.addEventListener('click', trigger);
+
+function trigger() {
+  debounce(arrowClicked, this);
+}
 function arrowClicked(direction) {
   let calledClass;
   cancelAnimationFrame(requestId);
   if (this.classList)
     calledClass = this.classList[0];
   if (calledClass === 'right_arrow' || direction === 'right') {
-    if (arrowCount === 5) {
-      arrowCount = 0; circleCount = 0;
+    if (arrowCount === 6) {
+      shiftImage(0);
+      arrowCount = 1; circleCount = 1;
     }
     else {
       ++circleCount; ++arrowCount;
+      if (arrowCount === 6)
+        circleCount = 0;
     }
   }
   else {
     if (arrowCount === 0) {
+      shiftImage(6);
       arrowCount = 5; circleCount = 5;
     }
     else {
       --circleCount; --arrowCount;
+      if (circleCount < 0)
+        circleCount = 5;
     }
   }
-  imageContainer.style.transform = `translateX(calc(-100% / 6 * ${arrowCount}))`;
-  movingCircle.style.transform = `translateX(${circleCount * circleGap}px)`;
+  setTimeout(() => {
+    imageContainer.style.transition = 'transform 0.7s ease-in-out';
+    movingCircle.style.transition = 'transform 0.7s ease-in-out';
+    imageContainer.style.transform = `translateX(calc(-100% / 7 * ${arrowCount}))`;
+    movingCircle.style.transform = `translateX(${circleCount * circleGap}px)`;
+  })
   requestId = window.requestAnimationFrame(step);
   start = 0;
 }
 
-let requestId;
+function shiftImage(count) {
+  imageContainer.setAttribute('style', `transition:none;transform:translateX(calc(-100% / 7 * ${count}))`)
+}
+
 let box = document.getElementsByClassName('box')[0];
 let start;
 function step(timestamp) {
@@ -70,3 +89,16 @@ document.addEventListener('keyup', (e) => {
   else if (e.key === 'ArrowLeft')
     arrowClicked('left');
 })
+
+
+
+function debounce(callback, callerArrow) {
+  let currentTime = new Date().getTime();
+  if ((currentTime - previousTime) / 1000 < 0.6) {
+    return;
+  }
+  else {
+    previousTime = currentTime;
+    callback.call(callerArrow);
+  }
+}
